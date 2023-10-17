@@ -15,15 +15,15 @@ pipeline {
 
         stage('Copy Files') {
             steps {
-                sh 'mkdir -p $WORKSPACE/htdocs/'
-                sh 'curl -o $WORKSPACE/htdocs/index.html https://www.momjunction.com/articles/lord-ganesha-stories-kids_00101242/genesh.html'
+                sh 'mkdir -p /usr/local/apache2/htdocs/'
+                sh 'curl -o /usr/local/apache2/htdocs/docker.html https://www.momjunction.com/articles/lord-ganesha-stories-kids_00101242/genesh.html'
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    def customImage = docker.build('httpd', '/usr/local/apache2/htdocs')
+                    def customImage = docker.build('httpd', '/usr/local/apache2/htdocs/docker.html')
                     customImage.push()
                 }
             }
