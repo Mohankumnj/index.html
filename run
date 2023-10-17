@@ -1,20 +1,26 @@
 pipeline {
     agent any
+    environment {
+        GIT_URL = 'https://github.com/Mohankumnj/index.html.git' // Replace with your Git repository URL
+    }
 
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                script {
+                    checkout([$class: 'GitSCM', branches: [[name: 'main']], userRemoteConfigs: [[url: GIT_URL]])
+                }
             }
         }
 
-     stage('Copy Files') {
-    steps {
-        sh 'curl -o /usr/local/apache2/htdocs/index.html https://www.momjunction.com/articles/lord-ganesha-stories-kids_00101242/index.html'
-    }
-}
+        stage('Copy Files') {
+            steps {
+                sh 'mkdir -p $WORKSPACE/htdocs/'
+                sh 'curl -o $WORKSPACE/htdocs/index.html https://www.momjunction.com/articles/lord-ganesha-stories-kids_00101242/genesh.html'
+            }
+        }
 
-stage('Build Docker Image') {
+        stage('Build Docker Image') {
             steps {
                 script {
                     def customImage = docker.build('httpd', '.')
