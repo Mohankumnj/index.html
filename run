@@ -16,14 +16,14 @@ pipeline {
         stage('Copy Files') {
             steps {
                 sh 'mkdir -p /usr/local/apache2/htdocs/'
-                sh 'curl -o /usr/local/apache2/htdocs/docker.html https://www.momjunction.com/articles/lord-ganesha-stories-kids_00101242/genesh.html'
+                sh 'curl -o /usr/local/apache2/htdocs/ https://www.momjunction.com/articles/lord-ganesha-stories-kids_00101242/index.html'
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    def customImage = docker.build('httpd', '/usr/local/apache2/htdocs/docker.html')
+                    def customImage = docker.build('httpd', '/usr/local/apache2/htdocs/')
                     customImage.push()
                 }
             }
