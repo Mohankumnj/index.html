@@ -23,7 +23,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    def customImage = docker.build('httpd', '.')
+                    def customImage = docker.build('httpd', '/usr/local/apache2/htdocs')
                     customImage.push()
                 }
             }
