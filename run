@@ -1,30 +1,20 @@
 pipeline {
     agent any
-    environment {
-        GIT_URL = 'https://github.com/Mohankumnj/index.html.git' // Replace with your Git repository URL
-    }
 
     stages {
-        stage('Checkout') {
+        stage('Checkout from GitHub') {
             steps {
-                script {
-                    checkout([$class: 'GitSCM', branches: [[name: 'main']], userRemoteConfigs: [[url: GIT_URL]])
-                }
+                checkout([$class: 'GitSCM', branches: [[name: 'master']], userRemoteConfigs: [[url: 'https://github.com/Mohankumnj/index.html.git']]])
             }
         }
-
-        stage('Copy Files') {
-            steps {
-                sh 'mkdir -p /usr/local/apache2/htdocs/'
-                sh 'curl -o /usr/local/apache2/htdocs/ https://www.momjunction.com/articles/lord-ganesha-stories-kids_00101242/index.html'
-            }
-        }
-
-        stage('Build Docker Image') {
+        stage('Build and Deploy to Docker') {
             steps {
                 script {
-                    def customImage = docker.build('httpd', '/usr/local/apache2/htdocs/')
-                    customImage.push()
+                    // Create the target directory if it doesn't exist
+                    sh 'docker exec httpdcont   mkdir -p /usr/local/apache2/htdocs/docker.html'
+
+                    // Copy your application files from Jenkins workspace to the container
+                    sh 'docker cp . httpdcont :/usr/local/apache2/htdocs/docker.html'
                 }
             }
         }
